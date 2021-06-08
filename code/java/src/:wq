@@ -346,10 +346,10 @@ public class DBproject{
 
 	public static void AddPatient(DBproject esql) {
             int patientID;
-            String patientName;
-            String gender;
+            string patientName;
+            string gender;
             int age;
-            String address;
+            string address;
             int numberOfAppointments;
 
             Scanner sc = new Scanner(System.in);
@@ -370,21 +370,8 @@ public class DBproject{
 
                 System.out.print("Name: ");
                 patientName = sc.nextLine();
-               
-
-                do
-                {
-                   System.out.print("Gender: ");
-                   gender = sc.nextLine();
-                   if(gender.equals("M") || gender.equals("F"))
-                   {
-                       break;
-                   }
-                   else
-                   {
-                       System.out.println("Gender must be M or F");
-                   }
-                }while (true);
+                System.out.print("Gender: ");
+                gender = sc.nextLine();
                 System.out.print("Age: ");  
 
                  do{
@@ -412,8 +399,8 @@ public class DBproject{
                         }
                 }while(true);      
                 try{
-                        String query  = "INSERT INTO Patient (patient_ID, name, gtype, age, address, number_of_appts)\n";
-                               query += "VALUES ("+String.valueOf(patientID)+",\'"+patientName+"\',\'"+gender+"\',"+String.valueOf(age)+ ",\'"+address+"\'," +String.valueOf(numberOfAppointments) +  ");\n";
+                        String query  = "INSERT INTO Patient (patientID, patientName, gender, age, address, numberOfAppointments)\n";
+                               query += "VALUES ("+String.valueOf(patientID)+",\'"+patientName+"\',\'"+gender+"\',"+String.valueOf(age)+ ",\'"+address+"\',\'" +String.valueOf(numberOfAppointments) +  ");\n";
                         System.out.println(query);
                         System.out.println(esql.executeQueryAndPrintResult(query));
                 }catch (Exception e){
