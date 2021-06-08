@@ -345,52 +345,8 @@ public class DBproject{
 	}
 
 	public static void AddPatient(DBproject esql) {//2
-		int doctor_ID;
-		String name;
-		String specialty;
-		int did;
-		Scanner sc = new Scanner(System.in);	
-		do{
-			System.out.print("--------Add Doctor-------\n");
-			System.out.print("Dotor ID: ");
-			try{
-				doctor_ID = Integer.parseInt(in.readLine());
-				break;
-			}catch (Exception e){
-				System.out.println("Dotor ID must be an interger!\n");
-				continue;
-			}
-			
-		}while(true);
-		System.out.print("Name: ");
-		name = sc.nextLine();
-		System.out.print("Specialty: ");
-		specialty = sc.nextLine();
-		System.out.print("Department ID: ");
-		do{	
-			try{
-				did = Integer.parseInt(in.readLine());
-				break;
-			}catch (Exception e){
-				System.out.println("Department ID must be an interger!\n");
-				continue;
-			}
-		}while(true);
-	 	//System.out.print("Dotor ID      : "+ doctor_ID + "\n");
-		//System.out.print("Name          : "+ name + "\n");
-		//System.out.print("Specialty     : "+ specialty + "\n");
-		//System.out.print("Department ID : "+ did + "\n");
-		
-		try{
-			String query  = "INSERT INTO Doctor (doctor_ID, name, specialty, did)\n";
-			       query += "VALUES ("+String.valueOf(doctor_ID)+",\'"+name+"\',\'"+specialty+"\',"+String.valueOf(did)+");\n";
-			System.out.println(query);
-			System.out.println(esql.executeQueryAndPrintResult(query));
-		}catch (Exception e){
-			System.out.println(e.getMessage());
-		}	       
 	}
-
+	
 	public static void AddAppointment(DBproject esql) {//3
 		int appnt_ID;
 		int month, date, year;
