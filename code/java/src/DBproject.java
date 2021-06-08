@@ -345,9 +345,102 @@ public class DBproject{
 	}
 
 	public static void AddPatient(DBproject esql) {//2
+		int doctor_ID;
+		String name;
+		String specialty;
+		int did;
+		Scanner sc = new Scanner(System.in);	
+		do{
+			System.out.print("--------Add Doctor-------\n");
+			System.out.print("Dotor ID: ");
+			try{
+				doctor_ID = Integer.parseInt(in.readLine());
+				break;
+			}catch (Exception e){
+				System.out.println("Dotor ID must be an interger!\n");
+				continue;
+			}
+			
+		}while(true);
+		System.out.print("Name: ");
+		name = sc.nextLine();
+		System.out.print("Specialty: ");
+		specialty = sc.nextLine();
+		System.out.print("Department ID: ");
+		do{	
+			try{
+				did = Integer.parseInt(in.readLine());
+				break;
+			}catch (Exception e){
+				System.out.println("Department ID must be an interger!\n");
+				continue;
+			}
+		}while(true);
+	 	//System.out.print("Dotor ID      : "+ doctor_ID + "\n");
+		//System.out.print("Name          : "+ name + "\n");
+		//System.out.print("Specialty     : "+ specialty + "\n");
+		//System.out.print("Department ID : "+ did + "\n");
+		
+		try{
+			String query  = "INSERT INTO Doctor (doctor_ID, name, specialty, did)\n";
+			       query += "VALUES ("+String.valueOf(doctor_ID)+",\'"+name+"\',\'"+specialty+"\',"+String.valueOf(did)+");\n";
+			System.out.println(query);
+			System.out.println(esql.executeQueryAndPrintResult(query));
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}	       
 	}
 
 	public static void AddAppointment(DBproject esql) {//3
+		int appnt_ID;
+		int month, date, year;
+		String status;
+		String adate;
+		String time_slot;
+		ArrayList<String> status_opt = new ArrayList<String>();
+		status_opt.add("PA");
+		status_opt.add("AC");
+		status_opt.add("AV");
+		status_opt.add("WL");
+		Scanner sc = new Scanner(System.in);	
+		do{
+			System.out.print("--------Add Appointment-------\n");
+			System.out.print("Appointment ID: ");
+			try{
+				appnt_ID = Integer.parseInt(in.readLine());
+				break;
+			}catch (Exception e){
+				System.out.println("Dotor ID must be an interger!\n");
+				continue;
+			}
+			
+		}while(true);
+		System.out.print("Date: ");
+		adate = sc.nextLine();
+		System.out.print("Time: ");
+		time_slot = sc.nextLine();
+		do{	
+			System.out.print("Status: ");
+			status = sc.nextLine();
+			if(status_opt.contains(status)){
+				break;
+			}else{
+				System.out.println("Appointment Status must be : PA(Past), AC(Active), AV(Available) and WL(Waitlisted).\n");
+			}
+		}while(true);
+	 	//System.out.print("Dotor ID      : "+ doctor_ID + "\n");
+		//System.out.print("Name          : "+ name + "\n");
+		//System.out.print("Specialty     : "+ specialty + "\n");
+		//System.out.print("Department ID : "+ did + "\n");
+		
+		try{
+			String query  = "INSERT INTO Appointment (appnt_ID, adate, time_slot, status)\n";
+			       query += "VALUES ("+String.valueOf(appnt_ID)+",\'"+adate+"\',\'"+time_slot+"\',\'"+status+"\');\n";
+			System.out.println(query);
+			System.out.println(esql.executeQueryAndPrintResult(query));
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}	       
 	}
 
 
@@ -357,6 +450,7 @@ public class DBproject{
 
 	public static void ListAppointmentsOfDoctor(DBproject esql) {//5
 		// For a doctor ID and a date range, find the list of active and available appointments of the doctor
+				
 	}
 
 	public static void ListAvailableAppointmentsOfDepartment(DBproject esql) {//6
