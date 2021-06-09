@@ -24,6 +24,10 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+// Library for checking date/time
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 /**
  * This class defines a simple embedded SQL utility class that is designed to
  * work with PostgreSQL JDBC drivers.
@@ -329,21 +333,22 @@ public class DBproject{
 				continue;
 			}
 		}while(true);
-	 	//System.out.print("Dotor ID      : "+ doctor_ID + "\n");
-		//System.out.print("Name          : "+ name + "\n");
-		//System.out.print("Specialty     : "+ specialty + "\n");
-		//System.out.print("Department ID : "+ did + "\n");
-		
+	 
 		try{
 			String query  = "INSERT INTO Doctor (doctor_ID, name, specialty, did)\n";
-			       query += "VALUES ("+String.valueOf(doctor_ID)+",\'"+name+"\',\'"+specialty+"\',"+String.valueOf(did)+");\n";
-			System.out.println(query);
-			System.out.println(esql.executeQueryAndPrintResult(query));
+			       query += "VALUES ("+String.valueOf(doctor_ID)+",\'"+name+"\',\'"+specialty+"\',"+String.valueOf(did)+");";
+			esql.executeUpdate(query);
+			System.out.println("\nUpdate Dotor Information: ");
+			System.out.print("----Successfully Add Dotor info. as following to DataBase-----\n");
+			System.out.print("Dotor ID      : "+ doctor_ID + "\n");
+			System.out.print("Name          : "+ name + "\n");
+			System.out.print("Specialty     : "+ specialty + "\n");
+			System.out.print("Department ID : "+ did + "\n\n");
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 		}	      
 	}
-	public static void AddPatient(DBproject esql) {
+	public static void AddPatient(DBproject esql) {//2/2
             int patientID;
             String patientName;
             String gender;
@@ -381,7 +386,7 @@ public class DBproject{
                    }
                    else
                    {
-                       System.out.println("Gender must be M or F");
+                       System.out.println("Gender must be M(Male) or F(Female)");
                    }
                 }while (true);
                 System.out.print("Age: ");  
@@ -391,7 +396,7 @@ public class DBproject{
                                 age = Integer.parseInt(in.readLine());
                                 break;
                         }catch (Exception e){
-                                System.out.println("Age must be an interger!\n");
+                                System.out.println("Age must be an interger!");
                                 continue;
                         }
                 }while(true); 
@@ -406,23 +411,26 @@ public class DBproject{
                                 numberOfAppointments = Integer.parseInt(in.readLine());
                                 break;
                         }catch (Exception e){
-                                System.out.println("Number of Appointments must be an interger!\n");
+                                System.out.println("Number of Appointments must be an interger!");
                                 continue;
                         }
                 }while(true);      
                 try{
                         String query  = "INSERT INTO Patient (patient_ID, name, gtype, age, address, number_of_appts)\n";
                                query += "VALUES ("+String.valueOf(patientID)+",\'"+patientName+"\',\'"+gender+"\',"+String.valueOf(age)+ ",\'"+address+"\'," +String.valueOf(numberOfAppointments) +  ");\n";
-                        System.out.println(query);
-                        System.out.println(esql.executeQueryAndPrintResult(query));
+                        esql.executeUpdate(query);
+			System.out.print("\n----Successfully Add Patient info. as following to DataBase-----\n");
+			System.out.print("Patient ID    : "+ String.valueOf(patientID) + "\n");
+			System.out.print("Name          : "+ patientName + "\n");
+			System.out.print("Specialty     : "+ gender + "\n");
+			System.out.print("Department ID : "+ String.valueOf(age) + "\n\n");
                 }catch (Exception e){
                         System.out.println(e.getMessage());
                 }
 }                    
 
-	public static void AddAppointment(DBproject esql) {//3
+	public static void AddAppointment(DBproject esql) {//3/3
 		int appnt_ID;
-		int month, date, year;
 		String status;
 		String adate;
 		String time_slot;
@@ -432,6 +440,9 @@ public class DBproject{
 		status_opt.add("AV");
 		status_opt.add("WL");
 		Scanner sc = new Scanner(System.in);	
+		SimpleDateFormat sdf_date = new SimpleDateFormat("M/d/yyyy");
+		SimpleDateFormat sdf_time = new SimpleDateFormat("H:m-H:m");
+		
 		do{
 			System.out.print("--------Add Appointment-------\n");
 			System.out.print("Appointment ID: ");
@@ -439,34 +450,56 @@ public class DBproject{
 				appnt_ID = Integer.parseInt(in.readLine());
 				break;
 			}catch (Exception e){
-				System.out.println("Dotor ID must be an interger!\n");
+				System.out.println("Dotor ID must be an interger!");
 				continue;
 			}
 			
 		}while(true);
-		System.out.print("Date: ");
-		adate = sc.nextLine();
-		System.out.print("Time: ");
-		time_slot = sc.nextLine();
+		
+		do{
+			try{	
+				System.out.print("Date: ");
+				adate = sc.nextLine();
+				sdf_date.parse(adate);
+				sdf_date.setLenient(false);
+				break;
+			}catch(ParseException e){
+				System.out.println("Invalid date! Try the format(mm/dd/yyyy)");
+			}
+		}while(true);
+
+		do{
+			try{
+				System.out.print("Time: ");
+				time_slot = sc.nextLine();
+				sdf_time.parse(time_slot);
+				break;
+			}catch(ParseException e){
+				System.out.println("Invalid time slot! Try the format(H:m-H:m)");
+				System.out.println("For example, 8:30a.m. - 10:00p.m. should be format (8:30-22:00)");
+			}
+		}while(true);
+
 		do{	
 			System.out.print("Status: ");
 			status = sc.nextLine();
 			if(status_opt.contains(status)){
 				break;
 			}else{
-				System.out.println("Appointment Status must be : PA(Past), AC(Active), AV(Available) and WL(Waitlisted).\n");
+				System.out.println("Appointment Status must be : PA(Past), AC(Active), AV(Available) and WL(Waitlisted).");
+				continue;
 			}
 		}while(true);
-	 	//System.out.print("Dotor ID      : "+ doctor_ID + "\n");
-		//System.out.print("Name          : "+ name + "\n");
-		//System.out.print("Specialty     : "+ specialty + "\n");
-		//System.out.print("Department ID : "+ did + "\n");
-		
+	 
 		try{
 			String query  = "INSERT INTO Appointment (appnt_ID, adate, time_slot, status)\n";
 			       query += "VALUES ("+String.valueOf(appnt_ID)+",\'"+adate+"\',\'"+time_slot+"\',\'"+status+"\');\n";
-			System.out.println(query);
-			System.out.println(esql.executeQueryAndPrintResult(query));
+			esql.executeUpdate(query);
+			System.out.print("\n----Successfully Add Appointment info. as following to DataBase-----\n");
+			System.out.print("Appointment ID: "+ String.valueOf(appnt_ID) + "\n");
+			System.out.print("Date          : "+ adate + "\n");
+			System.out.print("Time Slot     : "+ time_slot + "\n");
+			System.out.print("Status        : "+ status + "\n\n");
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 		}	       
@@ -477,9 +510,53 @@ public class DBproject{
 		// Given a patient, a doctor and an appointment of the doctor that s/he wants to take, add an appointment to the DB
 	}
 
-	public static void ListAppointmentsOfDoctor(DBproject esql) {//5
+	public static void ListAppointmentsOfDoctor(DBproject esql) {//5/5
 		// For a doctor ID and a date range, find the list of active and available appointments of the doctor
-				
+		int doctor_ID;
+		String st_date_range, ed_date_range;
+		Scanner sc = new Scanner(System.in);
+		SimpleDateFormat sdf_date_range = new SimpleDateFormat("M/d/yyyy");
+		
+		do{
+			System.out.println("\n----List Appointments of Dotor----");
+			System.out.print("Doctor ID: ");
+			try{
+				doctor_ID = Integer.parseInt(in.readLine());
+				break;
+			}catch(Exception e){
+				System.out.println("Dotor ID must be an interger!\n");
+				continue;
+			}
+		}while(true);
+		
+		do{
+			try{
+				System.out.println("----Date Range----");
+				System.out.print("From: ");
+				st_date_range = sc.nextLine();
+				sdf_date_range.parse(st_date_range);
+				System.out.print("To  : ");
+			  	ed_date_range = sc.nextLine();
+				sdf_date_range.parse(ed_date_range);		
+				break;
+			}catch(ParseException e){
+				System.out.println("Invalid date range! Try the format(mm/dd/yyyy)");
+				continue;
+			}
+		}while(true);		
+		
+		try{
+			String query  = "SELECT D.doctor_ID, D.name, A.adate, A.status\n";
+			       query += "FROM Doctor D, Appointment A, has_appointment H\n";
+			       query += "WHERE D.doctor_ID = H.doctor_id AND H.appt_id = A.appnt_ID AND (A.status = 'AC' OR A.status = 'AV') AND D.doctor_ID = "+ doctor_ID +" AND A.adate BETWEEN \'" + st_date_range + "\' AND \'" + ed_date_range + "\';";
+			List<List<String>> result = esql.executeQueryAndReturnResult(query);
+			for(int i = 0 ; i < result.size() ; i++){
+				System.out.print("\n"+result.get(i));
+				System.out.println("\n");
+			}
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public static void ListAvailableAppointmentsOfDepartment(DBproject esql) {//6
