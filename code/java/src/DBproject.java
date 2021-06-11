@@ -420,10 +420,12 @@ public class DBproject{
                                query += "VALUES ("+String.valueOf(patientID)+",\'"+patientName+"\',\'"+gender+"\',"+String.valueOf(age)+ ",\'"+address+"\'," +String.valueOf(numberOfAppointments) +  ");\n";
                         esql.executeUpdate(query);
 			System.out.print("\n----Successfully Add Patient info. as following to DataBase-----\n");
-			System.out.print("Patient ID    : "+ String.valueOf(patientID) + "\n");
-			System.out.print("Name          : "+ patientName + "\n");
-			System.out.print("Specialty     : "+ gender + "\n");
-			System.out.print("Department ID : "+ String.valueOf(age) + "\n\n");
+			System.out.print("Patient ID   		 : "+ String.valueOf(patientID) + "\n");
+			System.out.print("Name          	 : "+ patientName + "\n");
+			System.out.print("Gender		 : "+ gender+"\n");
+			System.out.print("Age			 : "+ String.valueOf(age)+"\n");
+			System.out.print("Address     	         : "+ gender + "\n");
+			System.out.print("Number of Appointments : "+ String.valueOf(numberOfAppointments) + "\n\n");
                 }catch (Exception e){
                         System.out.println(e.getMessage());
                 }
@@ -508,6 +510,7 @@ public class DBproject{
 
 	public static void MakeAppointment(DBproject esql) {//4
 		// Given a patient, a doctor and an appointment of the doctor that s/he wants to take, add an appointment to the DB
+			
 	}
 
 	public static void ListAppointmentsOfDoctor(DBproject esql) {//5/5
