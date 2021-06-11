@@ -701,7 +701,7 @@ public class DBproject{
 						}catch(Exception e){
 							System.out.println(e.getMessage());
 						}
-					}else if(result.get(tmp-1).get(5).contains("AC"){
+					}else if(result.get(tmp-1).get(5).contains("AC")){
 						 query = "UPDATE Appointment\n"+	
 						         "SET status = \'WL\'\n WHERE appnt_ID = "+result.get(tmp-1).get(2)+";";
 						try{
@@ -715,7 +715,19 @@ public class DBproject{
 						}catch(Exception e){
 							System.out.println(e.getMessage());
 						}						
-					}break;
+					}
+						 query = "UPDATE Patient\n"+	
+						         "SET number_of_appts = number_of_appts + 1\n WHERE patient_ID = "+patientID+";";
+						try{
+							esql.executeUpdate(query);
+							System.out.println("----Successfully Update Patient "+patientID+" Appointment Number----\n");
+							break;
+						}catch(Exception e){
+							System.out.println(e.getMessage());
+						}						
+					
+					
+					break;
 				}while(true);
 				break;
 			}catch(Exception e){
