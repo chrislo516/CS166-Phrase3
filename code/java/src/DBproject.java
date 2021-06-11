@@ -366,7 +366,7 @@ public class DBproject{
                                 patientID = Integer.parseInt(in.readLine());
                                 break;
                         }catch (Exception e){
-                                System.out.println("Patient ID must be an interger!\n");
+                                System.out.println("Patient ID must be an integer!\n");
                                 continue;
                         }
 
@@ -396,7 +396,7 @@ public class DBproject{
                                 age = Integer.parseInt(in.readLine());
                                 break;
                         }catch (Exception e){
-                                System.out.println("Age must be an interger!");
+                                System.out.println("Age must be an integer!");
                                 continue;
                         }
                 }while(true); 
@@ -411,7 +411,7 @@ public class DBproject{
                                 numberOfAppointments = Integer.parseInt(in.readLine());
                                 break;
                         }catch (Exception e){
-                                System.out.println("Number of Appointments must be an interger!");
+                                System.out.println("Number of Appointments must be an integer!");
                                 continue;
                         }
                 }while(true);      
@@ -450,7 +450,7 @@ public class DBproject{
 				appnt_ID = Integer.parseInt(in.readLine());
 				break;
 			}catch (Exception e){
-				System.out.println("Dotor ID must be an interger!");
+				System.out.println("Doctor ID must be an interger!");
 				continue;
 			}
 			
@@ -518,13 +518,13 @@ public class DBproject{
 		SimpleDateFormat sdf_date_range = new SimpleDateFormat("M/d/yyyy");
 		
 		do{
-			System.out.println("\n----List Appointments of Dotor----");
+			System.out.println("\n----List Appointments of Doctor----");
 			System.out.print("Doctor ID: ");
 			try{
 				doctor_ID = Integer.parseInt(in.readLine());
 				break;
 			}catch(Exception e){
-				System.out.println("Dotor ID must be an interger!\n");
+				System.out.println("Doctor ID must be an integer!\n");
 				continue;
 			}
 		}while(true);
@@ -560,7 +560,43 @@ public class DBproject{
 	}
 
 	public static void ListAvailableAppointmentsOfDepartment(DBproject esql) {//6
-		// For a department name and a specific date, find the list of available appointments of the department
+		// For a department name and a specific date, find the list of available appointments of the Department
+		Scanner sc = new Scanner (System.in);
+                String departmentName;
+                String date;
+                SimpleDateFormat sdf_date = new SimpleDateFormat("M/d/yyyy");
+                 
+                System.out.println("\n----List Available Appointments of Department----");
+                
+                System.out.print("Department Name: ");                              
+                departmentName = sc.nextLine();
+            do{
+                try{
+                      System.out.print("Enter Date: ");
+                      date = sc.nextLine();
+                      sdf_date.parse(date);
+                      sdf_date.setLenient(false);
+                      break;
+                } catch (ParseException e){
+                      System.out.println("Invalid date! Try the format(mm/dd/yyyy)");
+                }
+            } while (true);  
+
+              
+                try{
+
+                    String query = "SELECT DISTINCT A.appnt_ID, A.adate, A.time_slot, A.status\n";
+                    query = query + "FROM Appointment A, Department D\n";
+                    query = query + "WHERE D.name = " + "\'" + departmentName + "\'" + " AND A.adate = " + "\'" + date + "\'" + " AND A.status = 'AV';";
+                    List<List<String>> result = esql.executeQueryAndReturnResult(query);
+                    for(int i = 0 ; i < result.size() ; i++){
+                         System.out.print("\n"+result.get(i));
+                         System.out.println("\n");
+                    }
+                } catch (Exception e){
+                      System.out.println(e.getMessage());
+                }     
+                 
 	}
 
 	public static void ListStatusNumberOfAppointmentsPerDoctor(DBproject esql) {//7
