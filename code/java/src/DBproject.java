@@ -659,5 +659,30 @@ public class DBproject{
 	
 	public static void FindPatientsCountWithStatus(DBproject esql) {//8
 		// Find how many patients per doctor there are with a given status (i.e. PA, AC, AV, WL) and list that number per doctor.
-	}
-}
+		String query = "SELECT DISTINCT D.doctor_ID, D.name, " +
+                               "SUM(case when A.status IS NOT NULL then 1 else 0 end) AS \"PATIENT\""+                              
+                               "FROM Doctor D, Appointment A, Patient P, searches S, has_appointment H\n" +
+                               "WHERE S.aid = A.appnt_ID\n" +
+                               "AND S.pid = P.patient_ID\n" +
+                               "AND H.doctor_id = D.doctor_ID\n" +
+                               "GROUP BY D.doctor_ID, P.patient_ID\n" +
+                               "ORDER BY D.doctor_ID DESC;";
+
+                //String query = "SELECT DISTINCT D.doctor_ID, D.name, COUNT(P.name)\n" +
+                               //"FROM Doctor D, Appointment A, Patient P, searches S, has_appointment H\n" +
+                               //"WHERE S.aid = A.appnt_ID AND S.pid = P.patient_ID AND H.doctor_id = D.doctor_ID AND (A.status = 'PA' OR A.status = 'AC' OR A.status = 'AV' OR A.status = 'WL') AND H.doctor_id = D.doctor_ID\n" +
+                //"GROUP BY D.doctor_ID, COUNT(P.name);";   
+                try{
+                   List<List<String>> result = esql.executeQueryAndReturnResult(query);
+                   for(int i = 0; i < result.size(); i++)
+                   {
+                        System.out.println("\nDoctor ID           : " + result.get(i).get(0));
+                        System.out.println("Doctor Name              : " + result.get(i).get(1));
+                        System.out.println("Number of Patients With A Given Status: " + result.get(i).get(2));
+	           }
+               } catch (Exception e){
+                      System.out.println(e.getMessage());
+                }
+        }
+}         
+       
