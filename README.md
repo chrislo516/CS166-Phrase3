@@ -1,10 +1,9 @@
-# Hospital Database Management
+# Hospital Database Management (Spring 2021)
 ### Team Member
 #### Tsz Hin Lo
 #### Dylan Wong
 
-## Spring 2021
-
+## About
   This application is a hospital database management system which allows users to add patients, 
   add doctors, add appointments, make appointments, etc., In this report, we showcase our difficulties,
   assumptions, task division, and screenshots of our source code as well as example outputs.
