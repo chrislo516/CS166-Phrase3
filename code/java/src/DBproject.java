@@ -884,5 +884,23 @@ public class DBproject{
 	
 	public static void FindPatientsCountWithStatus(DBproject esql) {//8
 		// Find how many patients per doctor there are with a given status (i.e. PA, AC, AV, WL) and list that number per doctor.
+		String query =  "SELECT D.doctor_ID, D.name, COUNT(S.pid) "+
+			        "FROM Doctor D, Appointment A, has_appointment H, searches S\n"+
+				"WHERE S.aid = A.appnt_ID\n"+
+				"AND H.appt_id = S.aid\n"+
+				"AND H.doctor_id = D.doctor_ID\n"+
+				"GROUP BY D.doctor_ID\n"+
+				"ORDER BY D.doctor_ID ASC;";
+		try{
+		    List<List<String>> result = esql.executeQueryAndReturnResult(query);
+		    for(int i = 0 ; i < result.size() ; i++){
+			System.out.println("\nDoctor ID         : " + result.get(i).get(0));
+			System.out.println("Doctor             : " + result.get(i).get(1));
+			System.out.println("Number of Patient  : " + result.get(i).get(2));
+                    }
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}
+		System.out.println();
 	}
 }
