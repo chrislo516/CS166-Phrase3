@@ -565,12 +565,34 @@ public class DBproject{
                 String departmentName;
                 String date;
                 SimpleDateFormat sdf_date = new SimpleDateFormat("M/d/yyyy");
-                 
-                System.out.println("\n----List Available Appointments of Department----");
-                
-                System.out.print("Department Name: ");                              
-                departmentName = sc.nextLine();
-            do{
+                List<String> dp_name = new ArrayList<String>();
+		
+		// show all the department name
+		String q = "SELECT DISTINCT name\n FROM Department;";
+		try{
+			System.out.println("\n----List of All Department Names----");
+			List<List<String>> dn_result = esql.executeQueryAndReturnResult(q);
+			for(int i = 0 ; i < dn_result.size(); i++){
+			System.out.println(dn_result.get(i).get(0));
+			dp_name.add(dn_result.get(i).get(0));	
+		}
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}
+
+		System.out.println("\n----List Available Appointments of Department----");
+	       
+        	do{
+			System.out.print("Department Name: ");                              
+                	departmentName = sc.nextLine();
+			if(dp_name.contains(departmentName)){
+				break;
+			}else{
+				System.out.println("Could not find the following department " + departmentName + ". Please Try Again!");
+			}		
+		}while(true);
+
+               do{
                 try{
                       System.out.print("Enter Date: ");
                       date = sc.nextLine();
@@ -589,7 +611,10 @@ public class DBproject{
                     query = query + "FROM Appointment A, Department D\n";
                     query = query + "WHERE D.name = " + "\'" + departmentName + "\'" + " AND A.adate = " + "\'" + date + "\'" + " AND A.status = 'AV';";
                     List<List<String>> result = esql.executeQueryAndReturnResult(query);
-                    for(int i = 0 ; i < result.size() ; i++){
+                    if(result.size() == 0){
+			System.out.println("Could not find any avalible appoinment for Department " + departmentName + " On " + date + "\n");
+		    }
+		    for(int i = 0 ; i < result.size() ; i++){
                          System.out.print("\n"+result.get(i));
                          System.out.println("\n");
                     }
