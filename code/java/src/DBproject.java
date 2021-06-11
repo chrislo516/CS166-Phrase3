@@ -516,9 +516,10 @@ public class DBproject{
             int patientID;
             int doctorID;
 	    int apptID;
+	    int age;
+	    int tmp;
 	    String patientName;
             String gender;
-            int age;
             String address;
 	    String y_n = "Y";
             Scanner sc = new Scanner(System.in);
@@ -624,7 +625,7 @@ public class DBproject{
                 			}catch (Exception e){
                         				System.out.println(e.getMessage());
                 			}
-				}
+				}else{return;}
 			}		
                 }catch (Exception e){
                         System.out.println(e.getMessage());
@@ -641,13 +642,15 @@ public class DBproject{
 			}while(true);
 			
 			
-			String query = "SELECT D.doctor_ID, D.name, A.appnt_ID, A.adate, A.time_slot, A.status\n"+
-				"FROM Doctor D, Appointment A, has_appointment H\n"+
+			String query = "SELECT D.doctor_ID, D.name, A.appnt_ID, A.adate, A.time_slot, A.status, HS.name, HS.hospital_ID\n"+
+				"FROM Doctor D, Appointment A, has_appointment H, Hospital HS, Department DE\n"+
 				"WHERE D.doctor_ID = H.doctor_id\n"+
+				"AND D.did = DE.Dept_ID\n"+ 
+				"AND DE.hid = HS.hospital_ID\n"+
 				"AND H.appt_id = A.appnt_ID\n"+
-				"AND (A.status = 'AC' OR A.status = 'AL' OR A.status = 'WL')\n"+
+				"AND (A.status = 'AC' OR A.status = 'AV' OR A.status = 'WL')\n"+
 				"AND D.doctor_ID = "+doctorID+"\n"+
-				"GROUP BY D.doctor_ID, A.appnt_ID\n"+
+				"GROUP BY D.doctor_ID, A.appnt_ID, HS.name, HS.hospital_ID\n"+
 				"ORDER BY D.doctor_ID DESC;";
 			
 			try{
@@ -665,13 +668,14 @@ public class DBproject{
 					System.out.println("Date             : "+result.get(i).get(3));		
 					System.out.println("Time Slot        : "+result.get(i).get(4));
 					System.out.println("Status           : "+result.get(i).get(5));
+					System.out.println("Hosptial         : "+result.get(i).get(6)+ "("+result.get(i).get(7)+")");
 				}
 				System.out.println();
 				do{
 					System.out.println("-----Choose the following Appointment by input the corresponding number-----");
 					try{
 						do{
-							int tmp = Integer.parseInt(in.readLine());
+						        tmp = Integer.parseInt(in.readLine());
 							if(tmp<=result.size()){
 								break;
 							}else{
@@ -679,11 +683,45 @@ public class DBproject{
 							}
 						}while(true);
 						break;
-					}catch(Exception e){}
+					}catch(Exception e){continue;}
+				}while(true);
+				do{
+					System.out.println(result.get((tmp-1)));
+					if(result.get((tmp-1)).get(5).contains("AV")){
+						 query = "UPDATE Appointment\n"+	
+						         "SET status = \'AC\'\n WHERE appnt_ID = "+result.get(tmp-1).get(2)+";";
+						try{
+							esql.executeUpdate(query);
+							System.out.println("----Successfully Make Appointment----");
+							System.out.println("Hospital      : "+result.get(tmp-1).get(6));
+							System.out.println("Patient     ID: "+patientID);
+							System.out.println("Appointment ID: "+result.get(tmp-1).get(2));
+							System.out.println("Status        : Active");
+							break;
+						}catch(Exception e){
+							System.out.println(e.getMessage());
+						}
+					}else if(result.get(tmp-1).get(5).contains("AC"){
+						 query = "UPDATE Appointment\n"+	
+						         "SET status = \'WL\'\n WHERE appnt_ID = "+result.get(tmp-1).get(2)+";";
+						try{
+							esql.executeUpdate(query);
+							System.out.println("----Successfully Make Appointment----");
+							System.out.println("Hospital      : "+result.get(tmp-1).get(6));
+							System.out.println("Patient     ID: "+patientID);
+							System.out.println("Appointment ID: "+result.get(tmp-1).get(2));
+							System.out.println("Status        : WaitListed");
+							break;
+						}catch(Exception e){
+							System.out.println(e.getMessage());
+						}						
+					}break;
 				}while(true);
 				break;
-			}catch(Exception e){continue;}										
-			
+			}catch(Exception e){
+				System.out.println(e.getMessage());
+			continue;}										
+				
 		}while(true);
 		
 	}
