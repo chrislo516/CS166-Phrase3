@@ -551,12 +551,16 @@ public class DBproject{
 			       query += "WHERE D.doctor_ID = H.doctor_id AND H.appt_id = A.appnt_ID AND (A.status = 'AC' OR A.status = 'AV') AND D.doctor_ID = "+ doctor_ID +" AND A.adate BETWEEN \'" + st_date_range + "\' AND \'" + ed_date_range + "\';";
 			List<List<String>> result = esql.executeQueryAndReturnResult(query);
 			for(int i = 0 ; i < result.size() ; i++){
-				System.out.print("\n"+result.get(i));
-				System.out.println("\n");
+				System.out.println("\nDoctor ID   : "+result.get(i).get(0));
+				System.out.println("Doctor Name : "+result.get(i).get(1));
+				System.out.println("Time Slot   : "+result.get(i).get(2));
+				System.out.println("Status      : "+result.get(i).get(3));
 			}
+			System.out.println();
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 		}
+
 	}
 
 	public static void ListAvailableAppointmentsOfDepartment(DBproject esql) {//6
@@ -626,6 +630,27 @@ public class DBproject{
 
 	public static void ListStatusNumberOfAppointmentsPerDoctor(DBproject esql) {//7
 		// Count number of different types of appointments per doctors and list them in descending order
+		String query =  "SELECT D.doctor_ID, D.name, "+
+			        "SUM(case when A.status = 'PA' then 1 else 0 end) AS \"PA\","+
+		                "SUM(case when A.status = 'AC' then 1 else 0 end) AS \"AC\","+
+			        "SUM(case when A.status = 'AV' then 1 else 0 end) AS \"AV\","+
+			        "SUM(case when A.status = 'WL' then 1 else 0 end) AS \"WL\""+
+			        "FROM Doctor D, Appointment A, has_appointment H\n"+
+				"WHERE D.doctor_ID = H.doctor_id\n"+
+				"AND H.appt_id = A.appnt_ID\n"+
+				"GROUP BY D.doctor_ID, A.status\n"+
+				"ORDER BY D.doctor_ID DESC;";
+		try{
+		    List<List<String>> result = esql.executeQueryAndReturnResult(query);
+		    for(int i = 0 ; i < result.size() ; i++){
+			System.out.println("\nDoctor ID           : " + result.get(i).get(0));
+			System.out.println("Doctor              : " + result.get(i).get(1));
+			System.out.println("Type of Appointment : PC: " + result.get(i).get(2) + " AC: " + result.get(i).get(3) + " AV : " + result.get(i).get(4) + " WL : " + result.get(i).get(5));
+                    }
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}
+		System.out.println();
 	}
 
 	
